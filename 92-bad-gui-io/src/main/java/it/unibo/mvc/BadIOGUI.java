@@ -14,7 +14,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -42,7 +46,6 @@ public class BadIOGUI {
         final JPanel canvas = new JPanel();
         canvas.setLayout(new BorderLayout());
         final JButton write = new JButton("Write on file");
-        canvas.add(write, BorderLayout.CENTER);
         frame.setContentPane(canvas);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         /*
@@ -65,6 +68,32 @@ public class BadIOGUI {
                     e1.printStackTrace(); // NOPMD: allowed as this is just an exercise
                 }
             }
+        });
+        //01.01
+        final JPanel canvas2 = new JPanel();
+        canvas2.setLayout(new BoxLayout(canvas2, BoxLayout.X_AXIS));
+        canvas.removeAll();
+        canvas.add(canvas2, BorderLayout.CENTER);
+        canvas2.add(write);
+        //01.02
+        final JButton read = new JButton("Read from file");
+        canvas2.add(read);
+        read.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                List<String> lines = new LinkedList<>();
+                final Path PATH2 = FileSystems.getDefault().getPath("", PATH);
+                try {
+                    lines = java.nio.file.Files.readAllLines(PATH2, StandardCharsets.UTF_8);
+                } catch (IOException e1) {
+                    JOptionPane.showMessageDialog(frame, e1, "Error", JOptionPane.ERROR_MESSAGE);
+                    e1.printStackTrace();
+                }
+                for(String line: lines){
+                    System.out.println(line);
+                }
+            }
+            
         });
     }
 
@@ -90,6 +119,7 @@ public class BadIOGUI {
         /*
          * OK, ready to push the frame onscreen
          */
+        frame.pack();
         frame.setVisible(true);
     }
 
